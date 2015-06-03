@@ -28,7 +28,7 @@ public class GameEngine {
 
 	public void start() {
 
-		this.timer.scheduleAtFixedRate(new GameTickTask(this), 0, 500);
+		this.timer.scheduleAtFixedRate(new GameTickTask(this), 0, 200);
 
 	}
 
@@ -43,6 +43,8 @@ public class GameEngine {
 
 		boolean anyFalling = false;
 
+		boolean deleteAllFalling = false;
+
 		for (int i = this.fallingTiles.length - 11; i >= 0; i--) {
 
 			if (this.fallingTiles[i]) {
@@ -54,20 +56,52 @@ public class GameEngine {
 				nextIndex -= this.moveLeftCount;
 				nextIndex += this.moveRightCount;
 
-				if (this.tiles[nextIndex]) {//Block already exists below us.
+				if (this.tiles[nextIndex] && !this.fallingTiles[nextIndex]) {//Block already exists below us.
 
-					this.fallingTiles[i] = false;
-					this.tiles[i] = true;
+					deleteAllFalling = true;
+					break;
 
-				} else {
+				}
 
-					this.fallingTiles[i] = false;
-					this.tiles[i] = false;
+			}
 
-					this.fallingTiles[nextIndex] = true;
-					this.tiles[nextIndex] = true;
+		}
 
-					anyFalling = true;
+		if (deleteAllFalling) {
+
+			Arrays.fill(this.fallingTiles, false);
+			anyFalling = false;
+
+		} else {
+
+			for (int i = this.fallingTiles.length - 11; i >= 0; i--) {
+
+				if (this.fallingTiles[i]) {
+
+					//System.out.println(i);
+
+					int nextIndex = (i + 10);
+
+					nextIndex -= this.moveLeftCount;
+					nextIndex += this.moveRightCount;
+
+					if (this.tiles[nextIndex]) {//Block already exists below us.
+
+						this.fallingTiles[i] = false;
+
+						this.tiles[i] = true;
+
+					} else {
+
+						this.fallingTiles[i] = false;
+						this.tiles[i] = false;
+
+						this.fallingTiles[nextIndex] = true;
+						this.tiles[nextIndex] = true;
+
+						anyFalling = true;
+
+					}
 
 				}
 
