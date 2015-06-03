@@ -53,8 +53,21 @@ public class GameEngine {
 
 				int nextIndex = (i + 10);
 
-				nextIndex -= this.moveLeftCount;
-				nextIndex += this.moveRightCount;
+				if (this.moveLeftCount > 0 || this.moveRightCount > 0) {
+
+					String intString = Integer.toString((nextIndex + this.moveRightCount));
+
+					if (Integer.parseInt(String.valueOf(intString.charAt(intString.length() - 1))) == 0) {
+
+						this.moveLeftCount = 0;
+						this.moveRightCount = 0;
+
+					}
+
+					nextIndex -= this.moveLeftCount;
+					nextIndex += this.moveRightCount;
+
+				}
 
 				if (this.tiles[nextIndex] && !this.fallingTiles[nextIndex]) {//Block already exists below us.
 
